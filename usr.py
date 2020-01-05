@@ -45,52 +45,52 @@ def parse_args():
 
 
 def load_user_data(user_name):
-    # TODO utworzyć obiekt User dla podanej nazwy użytkownika (z danmi z bazy)
-    # TODO zwrócić ten obiekt lub None jeżeli nie ma takiego użytkownika
-    return None
+    return User.by_name(user_name)
 
 
 def check_password(user, password):
-    # TODO sprawdzić, czy podane hasło jest poprawne dla użytkownika
-    # TODO zwrócić True lub False
-    pass
+    user = User.by_name(user)
+    return user.password_valid(password)
+
 
 
 def add_new_user(user_name, password):
-    # TODO sprawdzić, czy hasło ma minimum 8 znaków (jeżeli nie, wypisać info i nie dodawać użytkownika)
-    # TODO dodać nowego użytkownika do bazy (nowy obiekt User, save_to_db)
-    # TODO Wypisać informację o dodaniu użytkownika w konsoli
-    print(user_name)
-    print(password)
-    pass
+    if len(password) < 8:
+        return print("Password must be at least 8 characters !!!")
+    user = User()
+    user.name = user_name
+    user.password = password
+    user.save_to_db()
+    return print('New User was added. :)')
 
 
 def change_password(user, new_password):
-    # TODO sprawdzić, czy nowe hasło ma min. 8 znaków
-    # TODO zmienić hasło w obiekcie user, zapisać go do bazy
-    # TODO wypisać informację w konsoli
-    pass
+    if len(new_password) < 8:
+        return print("Password must be at least 8 characters !!!")
+    user.password = new_password
+    user.save_to_db()
+    return print('User password was changed')
 
 
 def delete_user(user):
-    # TODO usunąć użytkownika
-    # TODO wypisać informację w konsoli
-    pass
+    user.delete()
+    return print(f'User on name: {user.name}, was deleted')
 
 
 def list_users():
-    # TODO pobrać listę wszystkich użytkowników
-    # TODO wyświetlić ich nazwy w konsoli
-    pass
+    print('User list:')
+    for u in User.all():
+        print(u.name+'\n')
+    return
 
 
 def choose_action(args):
-    user = load_user_data(args.username)
+    user = load_user_data(args.user)
 
     if not user:
-        return add_new_user(args.username, args.password)
+        return add_new_user(args.user, args.password)
 
-    if not check_password(args.username, args.password):
+    if not check_password(args.user, args.password):
         print("Invalid password")
         return
 
