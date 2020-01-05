@@ -7,7 +7,7 @@ def connection():
     global cnx
     if not cnx:
         cnx = psycopg2.connect(
-            dbname="msg_db",
+            dbname="ggpy",
             user="postgres",
             password="coderslab",
             host="localhost"

@@ -1,6 +1,7 @@
 from msgserv import User
 import argparse
 
+
 def parse_args():
     """
     Parsuje parametry z wiersza poleceń.
@@ -59,6 +60,8 @@ def add_new_user(user_name, password):
     # TODO sprawdzić, czy hasło ma minimum 8 znaków (jeżeli nie, wypisać info i nie dodawać użytkownika)
     # TODO dodać nowego użytkownika do bazy (nowy obiekt User, save_to_db)
     # TODO Wypisać informację o dodaniu użytkownika w konsoli
+    print(user_name)
+    print(password)
     pass
 
 
@@ -108,5 +111,3 @@ def choose_action(args):
 if __name__ == "__main__":
     parsed_args = parse_args()
     choose_action(parsed_args)
-
-

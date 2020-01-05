@@ -41,20 +41,27 @@ class User:
         """Zapisuje obiekt użytkownika do bazy"""
         c = cursor()
         if self.id == -1:
-            # TODO insert do tabeli users
-            # TODO z pobraniem id wstawionego wiersza
-            # TODO ustawienie self.__id na id wstawionego wiersza
-            pass
+            sql = 'INSERT INTO users(name, hashed_password) VALUES (%s, %s) RETURNING id'
+            c.execute(sql, (self.name, self.__hashed_pass))
+            self.__id, = c.fetchone()
         else:
-            # TODO update w tabeli users
-            pass
+            sql = """
+            UPDATE users
+            SET name = %s, hashed_password = %s
+            WHERE id = %s
+            """
+            c.execute(sql, (self.name, self.__hashed_pass, self.id))
         c.close()
         commit()
 
     def delete(self):
         """Usuwa użytkownika z bazy"""
         c = cursor()
-        # TODO delete z tabeli users
+        sql = """
+        DELETE FROM users 
+        WHERE id = %s
+        """
+        c.execute(sql, (self.id,))
         c.close()
         commit()
 
@@ -79,24 +86,33 @@ class User:
     @classmethod
     def by_id(cls, user_id):
         c = cursor()
-        # TODO select z tabeli users dla danego id
-        user = None  # TODO utworzyć tutaj obiekt za pomocą _from_row
+        sql = """
+        SELECT id, name, hashed_password FROM users WHERE id = %s
+        """
+        c.execute(sql, (user_id,))
+
+        user = cls._from_row(c.fetchone())
         c.close()
         return user
 
     @classmethod
     def by_name(cls, name):
         c = cursor()
-        # TODO select z tabeli users dla danego name
-        user = None  # TODO utworzyć tutaj obiekt za pomocą _from_row
+        sql = """
+        SELECT id, name, hashed_password FROM users WHERE name = %s
+        """
+        c.execute(sql, (name,))
+        user = cls._from_row(c.fetchone())
         c.close()
         return user
 
     @classmethod
     def all(cls):
         c = cursor()
-        # TODO pobrać wszystkie wiersze z tabeli users
+        sql = 'SELECT id, name, hashed_password FROM users'
+        c.execute(sql)
         res = []
-        # TODO iterować po kursorze i dołączać nowe obiekty User do res (tworzyć je za pomocą _from_row)
+        for row in c.fetchall():
+            res.append(cls._from_row(row))
         c.close()
         return res

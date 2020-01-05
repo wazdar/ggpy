@@ -1,1 +1,4 @@
 .idea/*
+/msgserv/db.py
+msgserv/__pycache__/
+msgserv/clcrypto/__pycache__/
